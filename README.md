@@ -32,7 +32,7 @@ git clone https://github.com/LucipherDev/ComfyUI-Sentinel
 3. Install dependencies:
 ```bash
 cd ComfyUI-Sentinel
-python install.py
+pip install -r requirements.txt
 ```
 
 ### Or Install via ComfyUI Manager
