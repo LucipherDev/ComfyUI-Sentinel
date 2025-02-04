@@ -128,6 +128,7 @@ async def post_login(request: web.Request) -> web.Response:
         response = web.json_response(
             {
                 "message": "Login successful",
+                "jwt_token": token,
             }
         )
         secure_flag = request.headers.get("X-Forwarded-Proto", "http") == "https"

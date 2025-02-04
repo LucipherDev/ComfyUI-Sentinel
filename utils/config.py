@@ -43,8 +43,8 @@ BLACKLIST = os.path.join(EXT_PATH, config.get("blacklist", "blacklist.txt"))
 
 BLACKLIST_AFTER_ATTEMPTS = config.get("blacklist_after_attempts")
 
-FREE_MEMORY_ON_LOGOUT = config.get("free_memory_on_logout", True)
-FORCE_HTTPS = config.get("force_https", True)
+FREE_MEMORY_ON_LOGOUT = config.get("free_memory_on_logout", False)
+FORCE_HTTPS = config.get("force_https", False)
 
 SEPERATE_USERS = config.get("seperate_users", False)
 
