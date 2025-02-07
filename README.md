@@ -9,12 +9,14 @@
 
 </div>
 
+### ***☢️ This is still under development. Use at your own risk. ☢️***
+
 ## Jump to Section
 - **[Installation](#installation)**
 - **[Setup](#setup)**
 - **[Features](#features)**
 - **[API Access](#api-access)**
-- **[Disclaimer](#disclaimer)**
+- **[Disclaimer](%EF%B8%8F-disclaimer)**
 - **[Commercial Use](#commercial-use)**
 
 ## Installation
