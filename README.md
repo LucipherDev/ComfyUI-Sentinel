@@ -16,7 +16,7 @@
 - **[Setup](#setup)**
 - **[Features](#features)**
 - **[API Access](#api-access)**
-- **[Disclaimer](%EF%B8%8F-disclaimer)**
+- **[Disclaimer](#%EF%B8%8F-disclaimer)**
 - **[Commercial Use](#commercial-use)**
 
 ## Installation
