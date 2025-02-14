@@ -1,0 +1,13 @@
+{
+    "secret_key_env": "SECRET_KEY",
+    "users_db": "users_db.json",
+    "access_token_expiration_hours": 12,
+    "log": "sentinel.log",
+    "log_levels": ["INFO"],
+    "whitelist": "whitelist.txt",
+    "blacklist": "blacklist.txt",
+    "blacklist_after_attempts": 0,
+    "free_memory_on_logout": false,
+    "force_https": false,
+    "seperate_users": false
+}

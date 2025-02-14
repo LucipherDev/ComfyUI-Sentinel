@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComfyUI Sentinel - Login</title>
+
+    <link rel="icon" href="/sentinel/assets/icon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" type="text/css" href="/sentinel/css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <img class="logo" src="/sentinel/assets/logo_transparent.png" alt="Transparent Logo">
+        <h1 class="title login">Login</h1>
+        <form id="login-form" onsubmit="login(event)">
+            <div class="form-field">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-field">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-field">
+                <a href="/register">Register a New User</a>
+            </div>
+            <button class="btn" type="submit">Login</button>
+        </form>
+    </div>
+    <div class="toast-container" id="toasts"></div>
+</body>
+<script src="/sentinel/js/auth.js"></script>
+
+</html>
