@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-sentinel"
+description = "ComfyUI Extension for Advanced Security. Implements login, multi-user registration, IP filtering, and user-specific input/output directories."
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["aiohttp", "PyJWT", "bcrypt", "bleach"]
+
+[project.urls]
+Repository = "https://github.com/LucipherDev/ComfyUI-Sentinel"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = "lucipherdev"
+DisplayName = "ComfyUI-Sentinel"
+Icon = "https://raw.githubusercontent.com/LucipherDev/ComfyUI-Sentinel/refs/heads/main/icon.png"
