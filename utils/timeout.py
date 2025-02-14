@@ -2,8 +2,7 @@ from typing import Optional
 from aiohttp import web
 from datetime import datetime, timezone, timedelta
 
-from .ip_filter import IPFilter
-
+from .ip_filter import IPFilter, get_ip
 
 class Timeout:
     def __init__(self, ip_filter: IPFilter, blacklist_after_attempts: int = 0):
@@ -73,7 +72,7 @@ class Timeout:
             """Middleware to handle request timeouts."""
             if request.path in limited and request.method == "POST":
                 is_timed_out, failed_attempts, remaining_seconds = (
-                    self.check_is_timed_out(request.remote)
+                    self.check_is_timed_out(get_ip(request))
                 )
 
                 if is_timed_out:

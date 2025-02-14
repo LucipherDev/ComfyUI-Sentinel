@@ -6,6 +6,24 @@ from aiohttp import web
 from pathlib import Path
 
 
+def get_ip(request: web.Request) -> ipaddress.IPv4Address | ipaddress.IPv6Address:
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        ip = forwarded.split(",")[0].strip()
+    else:
+        ip = request.headers.get("X-Real-IP")
+
+    if not ip:
+        ip = request.remote
+
+    try:
+        ip = str(ipaddress.ip_address(ip))
+    except ValueError:
+        ip = ""
+
+    return ip
+
+
 class IPFilter:
     def __init__(self, whitelist_file: str | Path, blacklist_file: str | Path):
         self.whitelist_file = whitelist_file
@@ -109,7 +127,7 @@ class IPFilter:
 
         @web.middleware
         async def ip_filter_middleware(request: web.Request, handler) -> web.Response:
-            ip = request.remote
+            ip = get_ip(request)
 
             if not self.is_allowed(ip):
                 return await handle_access_denied(

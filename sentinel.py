@@ -37,7 +37,7 @@ async def get_register(request: web.Request) -> web.Response:
 @routes.post("/register")
 async def post_register(request: web.Request) -> web.Response:
     sanitized_data = request.get("_sanitized_data", {})
-    ip = request.remote
+    ip = get_ip(request)
     new_user_username = sanitized_data.get("new_user_username")
     new_user_password = sanitized_data.get("new_user_password")
     username = sanitized_data.get("username")
@@ -111,7 +111,7 @@ async def get_login(request: web.Request) -> web.Response:
 @routes.post("/login")
 async def post_login(request: web.Request) -> web.Response:
     sanitized_data = request.get("_sanitized_data", {})
-    ip = request.remote
+    ip = get_ip(request)
     username = sanitized_data.get("username")
     password = sanitized_data.get("password")
 
@@ -145,7 +145,7 @@ async def post_login(request: web.Request) -> web.Response:
 
 @routes.get("/logout")
 async def get_logout(request: web.Request) -> web.Response:
-    ip = request.remote
+    ip = get_ip(request)
     free_memory = request.query.get("free_memory", "false").lower() == "true"
     unload_models = request.query.get("unload_models", "false").lower() == "true"
 

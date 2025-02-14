@@ -9,8 +9,6 @@
 
 </div>
 
-### ***☢️ This is still under development. Use at your own risk. ☢️***
-
 ## Jump to Section
 - **[Installation](#installation)**
 - **[Setup](#setup)**

@@ -5,7 +5,7 @@ from .logger import Logger
 from .users_db import UsersDB
 
 from .force_https import create_https_middleware
-from .ip_filter import IPFilter
+from .ip_filter import IPFilter, get_ip
 from .sanitizer import Sanitizer
 from .timeout import Timeout
 from .jwt_auth import JWTAuth
