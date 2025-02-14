@@ -15,9 +15,9 @@
 - **[Installation](#installation)**
 - **[Setup](#setup)**
 - **[Features](#features)**
+- **[ToDo](#todo)**
 - **[API Access](#api-access)**
 - **[Disclaimer](#%EF%B8%8F-disclaimer)**
-- **[Commercial Use](#commercial-use)**
 
 ## Installation
 
@@ -126,6 +126,10 @@ pip install -r requirements.txt
 - ### Separate Users <span style="color:#ef4444">****Experimental***</span>
     - Each user has an isolated input/output directory and queue history. Folder access is restricted accordingly. *Still under development but fairly functional. Use at your own risk*
 
+## ToDo
+
+- [ ] Check custom nodes for malicious code
+
 ## API Access
 
 All API calls to the ComfyUI server require authentication.
@@ -164,8 +168,3 @@ You can:
 *While **ComfyUI Sentinel** enhances security for ComfyUI, it **does not guarantee absolute protection**. Security is about risk mitigation, not elimination. Users are responsible for implementing their own security measures.*  
 
 ***Use at your own discretion.***
-
-## Commercial Use
-
-For commercial applications, contact me first.
-
