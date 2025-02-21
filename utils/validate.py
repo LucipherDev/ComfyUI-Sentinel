@@ -24,7 +24,7 @@ def validate_password(password: str) -> tuple[bool, str]:
     - Must contain at least one special character (e.g., !@#$%^&*).
     - Cannot contain spaces.
     """
-    if re.match(r"^(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$", password):
+    if re.match(r"^(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>?/`~])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>?/`~]{8,}$", password):
         return True, ""
     return (
         False,
