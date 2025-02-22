@@ -6,11 +6,11 @@ if (window.location.pathname === "/register") {
     const adminFields = document.getElementById("admin-fields");
     const registerLink = document.getElementById("register-link");
     const verticalDivider = document.getElementById("vertical-divider");
-    const isFirstUser = document.body.dataset.firstUser === "true";
+    const isAdminUser = document.body.dataset.adminUser === "true";
 
-    adminFields.style.display = isFirstUser ? "none" : "block";
-    registerLink.style.display = isFirstUser ? "none" : "block";
-    verticalDivider.style.display = isFirstUser ? "none" : "block";
+    adminFields.style.display = isAdminUser ? "none" : "block";
+    registerLink.style.display = isAdminUser ? "none" : "block";
+    verticalDivider.style.display = isAdminUser ? "none" : "block";
   });
 }
 
@@ -290,8 +290,8 @@ async function register(event) {
         addToast(result.message, "success");
         updateFailedAttempts(response.status, result, "register");
 
-        const isFirstUser = document.body.dataset.firstUser === "true";
-        if (isFirstUser) {
+        const isAdminUser = document.body.dataset.adminUser === "true";
+        if (isAdminUser) {
           window.location.href = "/login";
         }
 

@@ -262,3 +262,24 @@ class AccessControl:
         self.__prompt_queue.delete_queue_item = self.user_queue_delete_queue_item
         self.__prompt_queue.get_history = self.user_queue_get_history
         self.__prompt_queue.wipe_history = self.user_queue_wipe_history
+
+    def create_manager_access_control_middleware(
+        self, manager_directory: str = "/extensions/comfyui-manager", manager_routes: tuple = ()
+    ) -> web.middleware:
+        """Create middleware for manager access control."""
+
+        @web.middleware
+        async def manager_access_control_middleware(
+            request: web.Request, handler
+        ) -> web.Response:
+            """Middleware to handle manager access control."""
+            user_id = request.get("user_id")
+            
+            if self.users_db.get_admin_user()[0] == user_id or (not request.path.startswith(manager_routes) and not request.path.lower().startswith(manager_directory)):
+                return await handler(request)
+
+            return web.HTTPForbidden(
+                reason="You do not have access to comfyui manager."
+            )
+
+        return manager_access_control_middleware

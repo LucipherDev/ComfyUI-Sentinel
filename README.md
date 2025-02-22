@@ -76,6 +76,9 @@ pip install -r requirements.txt
     - `separate_users`: Isolate user input/output and queue history. <span style="color:#ef4444">****Experimental***</span>
         - Type: **bool**
         - Default: **false**
+    - `manager_admin_only`: Control who can access [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager)
+        - Type: **bool**
+        - Default: **false**
 
 2. **Run ComfyUI**
 3. **Access the GUI URL**
@@ -125,6 +128,9 @@ pip install -r requirements.txt
 
 - ### Separate Users <span style="color:#ef4444">****Experimental***</span>
     - Each user has an isolated input/output directory and queue history. Folder access is restricted accordingly. *Still under development but fairly functional. Use at your own risk*
+
+- ### ComfyUI Manager Access
+    - If turned on, only the admin user will be able to access the [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager) Extension.
 
 ## ToDo
 

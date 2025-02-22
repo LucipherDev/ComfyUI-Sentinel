@@ -10,7 +10,7 @@ class UsersDB:
         self.database = database
 
         self.users = {}
-        self.first_user = (None, {})
+        self.admin_user = (None, {})
 
         self._database_hash = None
 
@@ -81,11 +81,11 @@ class UsersDB:
             password.encode("utf-8"), user_data["password"].encode("utf-8")
         )
 
-    def get_first_user(self) -> tuple[str, dict] | None:
-        """Get the first user from the database."""
+    def get_admin_user(self) -> tuple[str, dict] | None:
+        """Get the admin user from the database."""
         self.load_users()
         for uid, user_data in self.users.items():
             if user_data.get("admin"):
-                self.first_user = (uid, user_data)
+                self.admin_user = (uid, user_data)
 
-        return self.first_user
+        return self.admin_user

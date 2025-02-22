@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-sentinel"
 description = "ComfyUI Extension for Advanced Security. Implements login, multi-user registration, IP filtering, and user-specific input/output directories."
-version = "1.0.1"
+version = "2.0.0"
 license = {file = "LICENSE"}
 dependencies = ["aiohttp", "PyJWT", "bcrypt", "bleach"]
 

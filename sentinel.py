@@ -28,8 +28,8 @@ async def get_register(request: web.Request) -> web.Response:
         html_content = f.read()
 
     if not users_db.load_users():
-        html_content = html_content.replace("{{ X-First-User }}", "true")
-    html_content = html_content.replace("{{ X-First-User }}", "false")
+        html_content = html_content.replace("{{ X-Admin-User }}", "true")
+    html_content = html_content.replace("{{ X-Admin-User }}", "false")
 
     return web.Response(body=html_content, content_type="text/html")
 
@@ -51,25 +51,25 @@ async def post_register(request: web.Request) -> web.Response:
     if not password_valid:
         return web.json_response({"error": password_invalid_message}, status=400)
 
-    first_user = users_db.get_first_user()
-    first_user_id = None
+    admin_user = users_db.get_admin_user()
+    admin_user_id = None
 
-    if first_user[0] and (not new_user_username or not new_user_password):
+    if admin_user[0] and (not new_user_username or not new_user_password):
         return web.json_response(
             {"error": "Missing new user registration details"}, status=400
         )
 
-    if first_user[0]:
+    if admin_user[0]:
         if not username or not password:
             return web.json_response(
-                {"error": "Missing first user authentication details"}, status=400
+                {"error": "Missing admin user authentication details"}, status=400
             )
 
-        first_user_id = first_user[0]
+        admin_user_id = admin_user[0]
 
-        if first_user_id is not None:
+        if admin_user_id is not None:
             if not (
-                users_db.get_user(username)[0] == first_user_id
+                users_db.get_user(username)[0] == admin_user_id
                 and users_db.check_username_password(username, password)
             ):
                 logger.registration_attempt(
@@ -87,11 +87,11 @@ async def post_register(request: web.Request) -> web.Response:
         str(uuid.uuid4()),
         new_user_username,
         new_user_password,
-        not bool(first_user_id),
+        not bool(admin_user_id),
     )
 
     logger.registration_success(
-        ip, new_user_username, username if first_user_id is not None else None
+        ip, new_user_username, username if admin_user_id is not None else None
     )
     timeout.remove_failed_attempts(ip)
     return web.json_response({"message": "User registered successfully"})
@@ -129,6 +129,7 @@ async def post_login(request: web.Request) -> web.Response:
             {
                 "message": "Login successful",
                 "jwt_token": token,
+                # "user_settings_id": next((key for key, value in instance.user_manager.users.items() if value == username), ""),
             }
         )
         secure_flag = request.headers.get("X-Forwarded-Proto", "http") == "https"
@@ -212,3 +213,6 @@ if SEPERATE_USERS:
 
     access_control.patch_folder_paths()
     access_control.patch_prompt_queue()
+
+if MANAGER_ADMIN_ONLY:
+    app.middlewares.append(access_control.create_manager_access_control_middleware(manager_directory="/extensions/comfyui-manager", manager_routes=("api/customnode",  "api/snapshot", "/api/manager", "api/comfyui_manager", "api/externalmodel")))

@@ -9,5 +9,6 @@
     "blacklist_after_attempts": 0,
     "free_memory_on_logout": false,
     "force_https": false,
-    "seperate_users": false
+    "seperate_users": false,
+    "manager_admin_only": false
 }

@@ -34,8 +34,8 @@ MATCH_HEADERS = {"X-Forwarded-Proto": "https"}
 TOKEN_ALGORITHM = "HS256"
 TOKEN_EXPIRE_MINUTES = 60 * config.get("access_token_expiration_hours", 12)
 
-USERS_FILE = os.path.join(EXT_PATH, config.get("users_db", "users_dp.json"))
-LOG_FILE = os.path.join(EXT_PATH, config.get("log", "sentinels_log.log"))
+USERS_FILE = os.path.join(EXT_PATH, config.get("users_db", "users_db.json"))
+LOG_FILE = os.path.join(EXT_PATH, config.get("log", "sentinel.log"))
 LOG_LEVELS = config.get("log_levels", ["INFO"])
 
 WHITELIST = os.path.join(EXT_PATH, config.get("whitelist", "whitelist.txt"))
@@ -47,6 +47,8 @@ FREE_MEMORY_ON_LOGOUT = config.get("free_memory_on_logout", False)
 FORCE_HTTPS = config.get("force_https", False)
 
 SEPERATE_USERS = config.get("seperate_users", False)
+
+MANAGER_ADMIN_ONLY = config.get("manager_admin_only", False)
 
 WEB_DIR = os.path.join(EXT_PATH, "sentinel-web")
 HTML_DIR = WEB_DIR
