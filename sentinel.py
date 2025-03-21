@@ -108,6 +108,67 @@ async def get_login(request: web.Request) -> web.Response:
     return web.FileResponse(os.path.join(HTML_DIR, "login.html"))
 
 
+@routes.get("/generate_token")
+async def get_generate_token(request: web.Request) -> web.Response:
+    with open(os.path.join(HTML_DIR, "generate_token.html"), "r") as f:
+        html_content = f.read()
+
+    if not users_db.load_users():
+        html_content = html_content.replace("{{ X-Admin-User }}", "true")
+    html_content = html_content.replace("{{ X-Admin-User }}", "false")
+
+    return web.Response(body=html_content, content_type="text/html")
+
+@routes.post("/generate_token")
+async def post_generate_token(request: web.Request) -> web.Response:
+    sanitized_data = request.get("_sanitized_data", {})
+    ip = get_ip(request)
+    username = sanitized_data.get("username")
+    password = sanitized_data.get("password")
+    logger.log_message("DEBUG", str(type(sanitized_data.get("expire_hours"))))
+    try:
+        expire_hours = int(sanitized_data.get("expire_hours"))
+    except ValueError:
+        return web.json_response(
+            {"error": "Invalid value ({}) for expire_hours".format(sanitized_data.get("expire_hours"))}, status=400
+        )
+    except TypeError:
+        return web.json_response(
+            {"error": "Missing expire_hours"}, status=400
+        )
+    if expire_hours>87600:
+       return web.json_response(
+            {"error": "expire_hours ({}) over the limit of 87600 (10 years)".format(expire_hours)}, status=400
+        )
+
+    if not username or not password:
+        return web.json_response(
+            {"error": "Missing login credentials (username and password)"}, status=400
+        )
+    
+
+    if users_db.check_username_password(username, password):
+        timeout.remove_failed_attempts(ip)
+
+        user_id, _ = users_db.get_user(username)
+        token = jwt_auth.create_access_token({"id": user_id, "username": username},expire_minutes=(expire_hours*60))
+        response = web.json_response(
+            {
+                "message": "Token successfully generated",
+                "jwt_token": token,
+            }
+        )
+        secure_flag = request.headers.get("X-Forwarded-Proto", "http") == "https"
+        response.set_cookie(
+           "jwt_token", token, httponly=True, secure=secure_flag, samesite="Strict"
+        )
+        logger.log_message("INFO", "Token generated for {}".format(username))
+        return response
+
+    logger.log_message("INFO", "Token failed to be generated for {}".format(username))
+    timeout.add_failed_attempt(ip)
+    return web.json_response({"error": "Invalid username or password"}, status=401)
+
 @routes.post("/login")
 async def post_login(request: web.Request) -> web.Response:
     sanitized_data = request.get("_sanitized_data", {})
@@ -200,11 +261,11 @@ if FORCE_HTTPS:
 app.middlewares.append(ip_filter.create_ip_filter_middleware())
 app.middlewares.append(sanitizer.create_sanitizer_middleware())
 app.middlewares.append(
-    timeout.create_time_out_middleware(limited=("/login", "/register"))
+    timeout.create_time_out_middleware(limited=("/login", "/register", "/generate_token"))
 )
 app.middlewares.append(
     jwt_auth.create_jwt_middleware(
-        public=("/login", "/logout", "/register"), public_prefixes=("/sentinel")
+        public=("/login", "/logout", "/register", "/generate_token"), public_prefixes=("/sentinel")
     )
 )
 
