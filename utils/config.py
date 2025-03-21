@@ -20,9 +20,9 @@ def load_config(file_path: str) -> Dict[str, Any]:
 
 config = load_config(CONFIG_FILE)
 
-SECRET_KEY = os.getenv(config.get("secret_key_env", "SECRET_KEY"))
+SECRET_KEY = os.getenv("SECRET_KEY",config.get("secret_key_env"))
 
-if not SECRET_KEY:
+if not SECRET_KEY or SECRET_KEY=="SECRET_KEY":
     warnings.warn(
         "The SECRET_KEY environment variable is not set. A random key will be used for this session. "
         "This will cause all users to log out on server restart."
