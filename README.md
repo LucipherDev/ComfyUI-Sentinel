@@ -51,6 +51,9 @@ pip install -r requirements.txt
     - `access_token_expiration_hours`: Duration (in hours) for which JWT tokens remain valid.
         - Type: **number**
         - Default: **12**
+    - `max_access_token_expiration_hours`: Max allowed duration (in hours) for which JWT tokens remain valid.
+        - Type: **number**
+        - Default: **8760**
     - `log`: Name of the log file.
         - Type: **str**
         - Default: **sentinel.log**
@@ -109,7 +112,12 @@ pip install -r requirements.txt
 
 - ### User Login
 
-![login-page](https://github.com/user-attachments/assets/45e0fbc2-2c37-4c93-bb98-ad2e264fbfb2)
+![login-page](https://github.com/user-attachments/assets/2ba998eb-3774-4e20-aa15-69e429717028)
+
+- ### Generate Token
+    - Get a JWT token for accessing the API.
+
+![generate-token-page](https://github.com/user-attachments/assets/30dd6324-352b-46fb-96f9-2c7132096a16)
 
 - ### Logout
     - A discreet logout button is available.
@@ -131,10 +139,6 @@ pip install -r requirements.txt
 
 - ### ComfyUI Manager Access
     - If turned on, only the admin user will be able to access the [ComfyUI Manager](https://github.com/ltdrdata/ComfyUI-Manager) Extension.
-
-## ToDo
-
-- [ ] Check custom nodes for malicious code
 
 ## API Access
 
