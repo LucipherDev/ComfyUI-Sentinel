@@ -33,6 +33,7 @@ MATCH_HEADERS = {"X-Forwarded-Proto": "https"}
 
 TOKEN_ALGORITHM = "HS256"
 TOKEN_EXPIRE_MINUTES = 60 * config.get("access_token_expiration_hours", 12)
+MAX_TOKEN_EXPIRE_MINUTES = 60 * config.get("max_access_token_expiration_hours", 8760)
 
 USERS_FILE = os.path.join(EXT_PATH, config.get("users_db", "users_db.json"))
 LOG_FILE = os.path.join(EXT_PATH, config.get("log", "sentinel.log"))

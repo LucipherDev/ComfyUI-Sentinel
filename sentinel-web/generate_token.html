@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ComfyUI Sentinel - Login</title>
+    <title>ComfyUI Sentinel - Generate API Token</title>
 
     <link rel="icon" href="/sentinel/assets/icon.ico" type="image/x-icon">
 
     <link rel="stylesheet" type="text/css" href="/sentinel/css/styles.css">
 </head>
 
-<body>
+<body">
     <div class="container">
         <img class="logo" src="/sentinel/assets/logo_transparent.png" alt="Transparent Logo">
-        <h1 class="title login">Login</h1>
-        <form id="login-form" onsubmit="login(event)">
+        <h1 class="title generate">Generate Token</h1>
+        <form id="generate-form" onsubmit="generate(event)">
             <div class="form-field">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -25,16 +25,17 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <div class="form-field">
-                <a href="/generate_token">Get API Token</a>
+                <label for="expire_hours">Expiration (in hours):</label>
+                <input type="integer" id="expire_hours" name="expire_hours" value="720" required>
             </div>
-            <div class="form-field">
-                <a href="/register">Register a New User</a>
+            <div class="form-field" id="login-link">
+                <a href="/login">Back to Login</a>
             </div>
-            <button class="btn" type="submit">Login</button>
+            <button class="btn" type="submit">Generate</button>
         </form>
     </div>
     <div class="toast-container" id="toasts"></div>
-</body>
-<script src="/sentinel/js/auth.js"></script>
+    </body>
+    <script src="/sentinel/js/auth.js"></script>
 
 </html>

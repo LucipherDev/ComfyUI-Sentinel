@@ -139,6 +139,7 @@ body {
     align-items: center;
     width: 100vw;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .container {
@@ -170,7 +171,8 @@ body {
     font-weight: 700;
 }
 
-.title.login {
+.title.login,
+.title.generate {
     margin-bottom: 1.5rem
 }
 

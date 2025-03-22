@@ -1,6 +1,13 @@
 let failedAttempts = 0;
 let timeoutEndTime = null;
 
+Object.defineProperty(String.prototype, 'capitalize', {
+  value: function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  },
+  enumerable: false
+});
+
 if (window.location.pathname === "/register") {
   document.addEventListener("DOMContentLoaded", () => {
     const adminFields = document.getElementById("admin-fields");
@@ -82,6 +89,28 @@ function validateRegisterForm() {
   return true;
 }
 
+function validateGenerateForm() {
+  const usernameField = document.getElementById("username");
+  const passwordField = document.getElementById("password");
+  const expireField = document.getElementById("expire_hours");
+  const expire_hours = expireField.value;
+
+  usernameField.classList.remove("error");
+  passwordField.classList.remove("error");
+  expireField.classList.remove("error");
+
+  if (/[^0-9]/.test(expire_hours) || /\s/.test(expire_hours)) {
+    addToast(
+      "Expiration can only contain numbers",
+      "error"
+    );
+    expireField.classList.add("error");
+    return false;
+  }
+
+  return true;
+}
+
 function disableForm(duration, action) {
   const form = document.getElementById(`${action}-form`);
   const button = form.querySelector("button[type='submit']");
@@ -105,13 +134,13 @@ function disableForm(duration, action) {
       if (remainingTime <= 0) {
         clearInterval(countdownInterval);
         button.disabled = false;
-        button.textContent = action === "login" ? "Login" : "Register";
+        button.textContent = action.capitalize();
         // fields.forEach((field) => (field.disabled = false));
       }
     }, 1000);
   } else {
     button.disabled = false;
-    button.textContent = action === "login" ? "Login" : "Register";
+    button.textContent = action.capitalize();
   }
 }
 
@@ -311,6 +340,45 @@ async function register(event) {
   }
 }
 
-loadTimeoutFromStorage(
-  window.location.pathname === "/login" ? "login" : "register"
-);
+async function generate(event) {
+  event.preventDefault();
+
+  if (validateGenerateForm() && !isTimedOut()) {
+    const button = event.submitter;
+    const form = document.getElementById("generate-form");
+    const formData = new FormData(form);
+
+    try {
+      button.disabled = true;
+      button.textContent = "Sending...";
+
+      const response = await fetch("/generate_token", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        addToast(result.message, "success");
+        updateFailedAttempts(response.status, result, "generate");
+
+        form.reset();
+
+        alert("API Token:\n"+result.jwt_token+"\n\nPlease copy this token and store it in a safe place. You will not be able to retrieve it again.");
+      } else {
+        addToast(
+          result.error || result.message || "Generation failed",
+          "error"
+        );
+      }
+      updateFailedAttempts(response.status, result, "generate");
+    } catch (error) {
+      addToast("An error occurred: " + error.message, "error");
+      button.disabled = false;
+      button.textContent = "Generate";
+    }
+  }
+}
+
+loadTimeoutFromStorage(window.location.pathname.replace("/", "").split("_")[0])

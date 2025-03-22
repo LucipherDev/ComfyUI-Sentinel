@@ -144,6 +144,75 @@ async def post_login(request: web.Request) -> web.Response:
     return web.json_response({"error": "Invalid username or password"}, status=401)
 
 
+@routes.get("/generate_token")
+async def get_generate_token(request: web.Request) -> web.Response:
+    if not users_db.load_users():
+        return web.HTTPFound("/register")
+
+    token = jwt_auth.get_token_from_request(request)
+    if token:
+        return web.HTTPFound("/logout")
+    return web.FileResponse(os.path.join(HTML_DIR, "generate_token.html"))
+
+
+@routes.post("/generate_token")
+async def post_generate_token(request: web.Request) -> web.Response:
+    sanitized_data = request.get("_sanitized_data", {})
+    ip = get_ip(request)
+    username = sanitized_data.get("username")
+    password = sanitized_data.get("password")
+
+    try:
+        expire_hours = int(
+            sanitized_data.get("expire_hours", TOKEN_EXPIRE_MINUTES / 60)
+        )
+
+    except ValueError:
+        return web.json_response(
+            {"error": "Expiration hours must be a number"},
+            status=400,
+        )
+
+    if expire_hours > MAX_TOKEN_EXPIRE_MINUTES / 60:
+        return web.json_response(
+            {
+                "error": f"Expiration hours must be smaller than {MAX_TOKEN_EXPIRE_MINUTES / 60}"
+            },
+            status=400,
+        )
+
+    if not username or not password:
+        return web.json_response(
+            {"error": "Missing login credentials (username and password)"}, status=400
+        )
+
+    if users_db.check_username_password(username, password):
+        timeout.remove_failed_attempts(ip)
+
+        user_id, _ = users_db.get_user(username)
+        token = jwt_auth.create_access_token(
+            {"id": user_id, "username": username}, expire_minutes=(expire_hours * 60)
+        )
+        response = web.json_response(
+            {
+                "message": "JWT Token successfully generated",
+                "jwt_token": token,
+            }
+        )
+        secure_flag = request.headers.get("X-Forwarded-Proto", "http") == "https"
+        response.set_cookie(
+            "jwt_token", token, httponly=True, secure=secure_flag, samesite="Strict"
+        )
+        
+        logger.generate_success(ip, username, expire_hours)
+        
+        return response
+
+    logger.generate_attempt(ip, username, password, expire_hours)
+    timeout.add_failed_attempt(ip)
+    return web.json_response({"error": "Invalid username or password"}, status=401)
+
+
 @routes.get("/logout")
 async def get_logout(request: web.Request) -> web.Response:
     ip = get_ip(request)
@@ -200,11 +269,14 @@ if FORCE_HTTPS:
 app.middlewares.append(ip_filter.create_ip_filter_middleware())
 app.middlewares.append(sanitizer.create_sanitizer_middleware())
 app.middlewares.append(
-    timeout.create_time_out_middleware(limited=("/login", "/register"))
+    timeout.create_time_out_middleware(
+        limited=("/login", "/register", "/generate_token")
+    )
 )
 app.middlewares.append(
     jwt_auth.create_jwt_middleware(
-        public=("/login", "/logout", "/register"), public_prefixes=("/sentinel")
+        public=("/login", "/logout", "/register", "/generate_token"),
+        public_prefixes=("/sentinel"),
     )
 )
 
@@ -215,4 +287,15 @@ if SEPERATE_USERS:
     access_control.patch_prompt_queue()
 
 if MANAGER_ADMIN_ONLY:
-    app.middlewares.append(access_control.create_manager_access_control_middleware(manager_directory="/extensions/comfyui-manager", manager_routes=("api/customnode",  "api/snapshot", "/api/manager", "api/comfyui_manager", "api/externalmodel")))
+    app.middlewares.append(
+        access_control.create_manager_access_control_middleware(
+            manager_directory="/extensions/comfyui-manager",
+            manager_routes=(
+                "api/customnode",
+                "api/snapshot",
+                "/api/manager",
+                "api/comfyui_manager",
+                "api/externalmodel",
+            ),
+        )
+    )

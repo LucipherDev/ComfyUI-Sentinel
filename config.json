@@ -2,6 +2,7 @@
     "secret_key_env": "SECRET_KEY",
     "users_db": "users_db.json",
     "access_token_expiration_hours": 12,
+    "max_access_token_expiration_hours": 8760,
     "log": "sentinel.log",
     "log_levels": ["INFO"],
     "whitelist": "whitelist.txt",

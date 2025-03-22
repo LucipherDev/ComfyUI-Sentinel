@@ -63,6 +63,14 @@ class Logger:
 
     def login_success(self, ip: str, username: str) -> None:
         self.info(f"User: '{username}' logged in from IP: {ip}")
+        
+    def generate_attempt(self, ip: str, username: str, password: str, expire_hours: int) -> None:
+        self.info(
+            f"Warning: Attempted generation from IP: {ip} with username: '{username}', password: '{password}' and expiration hours: {expire_hours}"
+        )
+
+    def generate_success(self, ip: str, username: str, expire_hours: int) -> None:
+        self.info(f"User: '{username}' generated token from IP: {ip} with expiration hours: {expire_hours}")
 
     def registration_attempt(
         self,

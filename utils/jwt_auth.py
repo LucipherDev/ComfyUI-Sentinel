@@ -34,10 +34,12 @@ class JWTAuth:
             return auth_header[len("Bearer ") :]
         return request.cookies.get("jwt_token")
 
-    def create_access_token(self, data: dict) -> str:
+    def create_access_token(self, data: dict, expire_minutes=None) -> str:
         """Create a JWT access token."""
         to_encode = data.copy()
-        expire = datetime.now(timezone.utc) + timedelta(minutes=self.expire_minutes)
+        if not expire_minutes:
+            expire_minutes = self.expire_minutes
+        expire = datetime.now(timezone.utc) + timedelta(minutes=expire_minutes)
         to_encode.update({"exp": expire})
         return jwt.encode(to_encode, self.__secret_key, algorithm=self.algorithm)
 
