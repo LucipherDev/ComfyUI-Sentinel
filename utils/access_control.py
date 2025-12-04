@@ -161,7 +161,7 @@ class AccessControl:
             return (item["prompt"], i)
 
     def user_queue_task_done(
-        self, item_id, history_result, status: Optional["PromptQueue.ExecutionStatus"]
+        self, item_id, history_result, status: Optional["PromptQueue.ExecutionStatus"], process_item=None
     ):
         """Mark a user-specific queue task as done."""
         with self.__prompt_queue.mutex:
@@ -187,8 +187,18 @@ class AccessControl:
         with self.__prompt_queue.mutex:
             out = []
             for x in self.__prompt_queue.currently_running.values():
-                out += [x]
-            return (out, copy.deepcopy(self.__prompt_queue.queue))
+                # Unwrap Sentinel format to original tuple format
+                if isinstance(x, dict) and "prompt" in x:
+                    out.append(x["prompt"])
+                else:
+                    out.append(x)
+            queued = []
+            for x in self.__prompt_queue.queue:
+                if isinstance(x, dict) and "prompt" in x:
+                    queued.append(x["prompt"])
+                else:
+                    queued.append(x)
+            return (out, queued)
 
     def user_queue_wipe_queue(self):
         """Wipe the user-specific queue."""
@@ -258,6 +268,7 @@ class AccessControl:
         self.__prompt_queue.get = self.user_queue_get
         self.__prompt_queue.task_done = self.user_queue_task_done
         self.__prompt_queue.get_current_queue = self.user_queue_get_current_queue
+        self.__prompt_queue.get_current_queue_volatile = self.user_queue_get_current_queue
         self.__prompt_queue.wipe_queue = self.user_queue_wipe_queue
         self.__prompt_queue.delete_queue_item = self.user_queue_delete_queue_item
         self.__prompt_queue.get_history = self.user_queue_get_history
