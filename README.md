@@ -1,3 +1,11 @@
+# 🚨 PROJECT DEPRECATED 🚨
+
+**This repository is no longer maintained.** But a fantastic fork with frequent updates and new features have been developed by [@DayMan84](https://github.com/DayMan84). 
+
+### 👉 Please move to the active repository by here: [DayMan84/ComfyUI-Usgromana](https://github.com/DayMan84/ComfyUI-Usgromana)
+
+<hr>
+
 <p align="center">
 <img src="./sentinel-web/assets/logo_transparent.png" alt="ComfyUI Sentinel Logo" width="200px">
 </p>
@@ -8,8 +16,6 @@
 #### ComfyUI Extension for Advanced Security. Implements login, multi-user registration, IP filtering, and user-specific input/output directories.
 
 </div>
-
-### ***☢️ This is still under development. Use at your own risk. ☢️***
 
 ## Jump to Section
 - **[Installation](#installation)**
